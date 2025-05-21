@@ -49,7 +49,8 @@ begin
     TMultiLog4DUtil
      .Logger
      .Tag('MultiLog4D')
-     .Output([loConsole, loFile, loEventViewer])
+     .Output([loConsole, loFile, loEventViewer, loRest])
+     .HttpServer('https://posttestserver.dev/p/68l8imv7tpg0akg1/post')
      .LogWrite('>>>>>>>>>> App Console - Starting <<<<<<<<<', ltInformation);
 
     repeat
