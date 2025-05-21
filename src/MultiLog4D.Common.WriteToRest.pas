@@ -20,6 +20,7 @@ type
     FLogFormat: string;
     FDateTimeFormat: string;
     FUserName: string;
+    FTag: string;
     {$IFDEF MSWINDOWS}
     FEventID: DWORD;
     {$ENDIF}
@@ -38,6 +39,7 @@ type
     function SetLogFormat(const AFormat: string): TMultiLogWriteToRest;
     function SetDateTimeFormat(const ADateTimeFormat: string): TMultiLogWriteToRest;
     function SetUserName(const AUserName: string): TMultiLogWriteToRest;
+    function SetTag(const ATag: string): TMultiLogWriteToRest;
     function SetEventID(const AEventID: {$IFDEF MSWINDOWS}DWORD{$ELSEIF DEFINED(LINUX)}LONGWORD{$ELSEIF DEFINED(MACOS)}UInt32{$ENDIF}): TMultiLogWriteToRest;
     function Execute(const AMsg: string; const ALogType: TLogType): TMultiLogWriteToRest;
   end;
@@ -82,6 +84,12 @@ begin
   Result := Self;
 end;
 
+function TMultiLogWriteToRest.SetTag(const ATag: string): TMultiLogWriteToRest;
+begin
+  FTag := ATag;
+  Result := Self;
+end;
+
 function TMultiLogWriteToRest.SetEventID(const AEventID: {$IFDEF MSWINDOWS}DWORD{$ELSEIF DEFINED(LINUX)}LONGWORD{$ELSEIF DEFINED(MACOS)}UInt32{$ENDIF}): TMultiLogWriteToRest;
 begin
   FEventID := AEventID;
@@ -114,14 +122,19 @@ begin
 
   lJsonLog := TJSONObject.Create;
   try
-    LogLine := FLogFormat;
-    LogLine := StringReplace(LogLine, '${time}', FormatDateTime(DateTimeFormat, Now), [rfReplaceAll]);
-    LogLine := StringReplace(LogLine, '${username}', FUserName, [rfReplaceAll]);
-    LogLine := StringReplace(LogLine, '${log_type}', LogPrefix, [rfReplaceAll]);
-    LogLine := StringReplace(LogLine, '${message}', AMsg, [rfReplaceAll]);
-    LogLine := StringReplace(LogLine, '${eventid}', Format('%4.4d', [FEventID]), [rfReplaceAll]);
+    //LogLine := FLogFormat;
+    //LogLine := StringReplace(LogLine, '${time}', FormatDateTime(DateTimeFormat, Now), [rfReplaceAll]);
+    //LogLine := StringReplace(LogLine, '${username}', FUserName, [rfReplaceAll]);
+    //LogLine := StringReplace(LogLine, '${log_type}', LogPrefix, [rfReplaceAll]);
+    //LogLine := StringReplace(LogLine, '${message}', AMsg, [rfReplaceAll]);
+    //LogLine := StringReplace(LogLine, '${eventid}', Format('%4.4d', [FEventID]), [rfReplaceAll]);
+    LogLine := AMsg;
 
-    lJsonLog.AddPair('LogType', LogPrefix);
+    lJsonLog.AddPair('logtype', LogPrefix);
+    lJsonLog.AddPair('username', FUserName);
+    lJsonLog.AddPair('time', FormatDateTime(DateTimeFormat, Now));
+    lJsonLog.AddPair('eventid', Format('%4.4d', [FEventID]));
+    lJsonLog.AddPair('tag', FTag);
     lJsonLog.AddPair('msg', LogLine);
     LogLine := lJsonLog.ToString;
     Result := LogLine;

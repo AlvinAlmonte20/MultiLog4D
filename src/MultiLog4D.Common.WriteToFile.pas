@@ -18,6 +18,7 @@ type
     FLogFormat: string;
     FDateTimeFormat: string;
     FUserName: string;
+    FTag: string;
     {$IFDEF MSWINDOWS}
     FEventID: DWORD;
     {$ENDIF}
@@ -36,6 +37,7 @@ type
     function SetLogFormat(const AFormat: string): TMultiLogWriteToFile;
     function SetDateTimeFormat(const ADateTimeFormat: string): TMultiLogWriteToFile;
     function SetUserName(const AUserName: string): TMultiLogWriteToFile;
+    function SetTag(const ATag: string): TMultiLogWriteToFile;
     function SetEventID(const AEventID: {$IFDEF MSWINDOWS}DWORD{$ELSEIF DEFINED(LINUX)}LONGWORD{$ELSEIF DEFINED(MACOS)}UInt32{$ENDIF}): TMultiLogWriteToFile;
     function Execute(const AMsg: string; const ALogType: TLogType): TMultiLogWriteToFile;
   end;
@@ -80,6 +82,12 @@ begin
   Result := Self;
 end;
 
+function TMultiLogWriteToFile.SetTag(const ATag: string): TMultiLogWriteToFile;
+begin
+  FTag := ATag;
+  Result := Self;
+end;
+
 function TMultiLogWriteToFile.SetEventID(const AEventID: {$IFDEF MSWINDOWS}DWORD{$ELSEIF DEFINED(LINUX)}LONGWORD{$ELSEIF DEFINED(MACOS)}UInt32{$ENDIF}): TMultiLogWriteToFile;
 begin
   FEventID := AEventID;
@@ -102,7 +110,7 @@ begin
   end;
 
   if FLogFormat.IsEmpty then
-    FLogFormat := '${time} ${username} ${eventid} [${log_type}] - ${message}';
+    FLogFormat := '${time} ${username} ${eventid} ${Tag} [${log_type}] - ${message}';
 
   if FDateTimeFormat.IsEmpty then
     DateTimeFormat := 'YYYY-MM-DD hh:nn:ss'
@@ -112,6 +120,7 @@ begin
   LogLine := FLogFormat;
   LogLine := StringReplace(LogLine, '${time}', FormatDateTime(DateTimeFormat, Now), [rfReplaceAll]);
   LogLine := StringReplace(LogLine, '${username}', FUserName, [rfReplaceAll]);
+  LogLine := StringReplace(LogLine, '${Tag}', FTag, [rfReplaceAll]);
   LogLine := StringReplace(LogLine, '${log_type}', LogPrefix, [rfReplaceAll]);
   LogLine := StringReplace(LogLine, '${message}', AMsg, [rfReplaceAll]);
   LogLine := StringReplace(LogLine, '${eventid}', Format('%4.4d', [FEventID]), [rfReplaceAll]);
