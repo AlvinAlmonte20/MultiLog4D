@@ -60,6 +60,7 @@ begin
     .SetDateTimeFormat(FDateTimeFormat)
     .SetUserName(FUserName)
     .SetEventID(FEventID)
+    .SetTag(FTag)
     .Execute(AMsg, ALogType);
 end;
 
