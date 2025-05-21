@@ -17,7 +17,7 @@ type
 //  {$ENDIF}
 
   {$IFDEF MSWINDOWS}
-  TLogOutput = (loConsole, loFile, loEventViewer);
+  TLogOutput = (loConsole, loFile, loEventViewer, loRest, loEmail);
   TLogOutputSet = set of TLogOutput;
   {$ENDIF}
 

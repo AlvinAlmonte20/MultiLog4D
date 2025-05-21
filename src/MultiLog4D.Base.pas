@@ -29,6 +29,7 @@ type
     {$ENDIF}
     class var FTag: string;
     class var FTagSet: Boolean;
+    class var FHttpServer: string;
     class var FEnableLog : Boolean;
     {$IF NOT DEFINED(ANDROID) AND NOT DEFINED(IOS)}
       {$IF DEFINED(MSWINDOWS)}
@@ -66,6 +67,7 @@ type
       {$ENDIF}
       function UserName(const AUserName: string): IMultiLog4D; virtual;
     {$ENDIF}
+    function HttpServer(const AHttpServer: string): IMultiLog4D; virtual;
     function EnableLog(const AEnable: Boolean = True): IMultiLog4D; virtual;
     function LogWrite(const AMsg: string; const ALogType: TLogType): IMultiLog4D; virtual; abstract;
     function LogWriteInformation(const AMsg: string): IMultiLog4D; virtual; abstract;
@@ -157,6 +159,12 @@ begin
 end;
 {$ENDIF}
 {$ENDIF}
+function TMultiLog4DBase.HttpServer(const AHttpServer: string): IMultiLog4D;
+begin
+  FHttpServer := AHttpServer;
+  Result := Self as IMultiLog4D;
+end;
+
 function TMultiLog4DBase.EnableLog(const AEnable: Boolean = True): IMultiLog4D;
 begin
   FEnableLog := AEnable;

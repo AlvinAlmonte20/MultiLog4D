@@ -12,7 +12,8 @@ uses
     Winapi.Windows,
   {$ENDIF}
   MultiLog4D.Types,
-  MultiLog4D.Common.WriteToFile;
+  MultiLog4D.Common.WriteToFile,
+  MultiLog4D.Common.WriteToRest;
 
 type
   TMultiLog4DWindows = class(TMultiLog4DBase)
@@ -20,11 +21,12 @@ type
     procedure WriteToConsole(const AMsg: string; const ALogType: TLogType);
     procedure WriteToFile(const AMsg: string; const ALogType: TLogType);
     procedure WriteToEventViewer(const AMessage: string; AType: Integer);
+    procedure WriteToRest(const AMsg: string; const ALogType: TLogType);
   protected
     procedure LogWriteToDestination(const AMsg: string; const ALogType: TLogType);
   public
     constructor Create(const AFileName: string = ''); overload;
-    {$IF DEFINED(ML4D_DESKTOP) OR DEFINED(ML4D_CONSOLE) OR DEFINED(ML4D_EVENTVIEWER)}
+    {$IF DEFINED(ML4D_DESKTOP) OR DEFINED(ML4D_CONSOLE) OR DEFINED(ML4D_EVENTVIEWER) OR DEFINED(ML4D_HTTPSERVER)}
       function Category(const AEventCategory: TEventCategory): IMultiLog4D; override;
       function EventID(const AEventID: DWORD): IMultiLog4D; override;
       function UserName(const AUserName: string): IMultiLog4D; override;
@@ -91,6 +93,17 @@ begin
     RaiseLastOSError;
 end;
 
+procedure TMultiLog4DWindows.WriteToRest(const AMsg: string; const ALogType: TLogType);
+begin
+  TMultiLogWriteToRest.Instance
+    .HttpServer(FHttpServer)
+    .SetLogFormat(FLogFormat)
+    .SetDateTimeFormat(FDateTimeFormat)
+    .SetUserName(FUserName)
+    .SetEventID(FEventID)
+    .Execute(AMsg, ALogType);
+end;
+
 procedure TMultiLog4DWindows.LogWriteToDestination(const AMsg: string; const ALogType: TLogType);
 var
   LType: Integer;
@@ -113,6 +126,9 @@ begin
     end;
     WriteToEventViewer(AMsg, LType);
   end;
+
+  if loRest in FLogOutput then
+    WriteToRest(AMsg, ALogType);
 end;
 
 (*
@@ -145,7 +161,7 @@ begin
 end;
 *)
 
-{$IF DEFINED(ML4D_DESKTOP) OR DEFINED(ML4D_CONSOLE) OR DEFINED(ML4D_EVENTVIEWER)}
+{$IF DEFINED(ML4D_DESKTOP) OR DEFINED(ML4D_CONSOLE) OR DEFINED(ML4D_EVENTVIEWER) OR DEFINED(ML4D_HTTPSERVER)}
 function TMultiLog4DWindows.Category(const AEventCategory: TEventCategory): IMultiLog4D;
 begin
   FEventCategory := AEventCategory;

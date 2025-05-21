@@ -35,6 +35,7 @@ type
       {$ENDIF}
       function UserName(const AUserName: string): IMultiLog4D;
     {$ENDIF}
+    function HttpServer(const AHttpServer: string): IMultiLog4D;
     function EnableLog(const AEnable: Boolean = True): IMultiLog4D;
     function LogWrite(const AMsg: string; const ALogType: TLogType): IMultiLog4D;
     function LogWriteInformation(const AMsg: string): IMultiLog4D;

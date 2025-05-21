@@ -9,12 +9,14 @@ uses
   MultiLog4D.Interfaces,
   MultiLog4D.Types,
   MultiLog4D.Common.WriteToFile,
+  MultiLog4D.Common.WriteToRest,
   MultiLog4D.Posix.Syslog;
 
 type
   TMultiLog4DLinux = class(TMultiLog4DBase)
   private
     procedure WriteToSysLog(const AMsg: string; const ALogType: TLogType);
+    procedure WriteToRest(const AMsg: string; const ALogType: TLogType);
   protected
     procedure LogWriteToDestination(const AMsg: string; const ALogType: TLogType);
   public
@@ -51,9 +53,23 @@ begin
   syslog(Priority, AMsg);
 end;
 
+procedure TMultiLog4DLinux.WriteToRest(const AMsg: string; const ALogType: TLogType);
+begin
+  TMultiLogWriteToRest.Instance
+    .HttpServer(FHttpServer)
+    .SetLogFormat(FLogFormat)
+    .SetDateTimeFormat(FDateTimeFormat)
+    .SetUserName(FUserName)
+    .SetEventID(FEventID)
+    .Execute(AMsg, ALogType);
+end;
+
 procedure TMultiLog4DLinux.LogWriteToDestination(const AMsg: string; const ALogType: TLogType);
 begin
   WriteToSysLog(AMsg, ALogType);
+
+  if loRest in FLogOutput then
+    WriteToRest(AMsg, ALogType);
 end;
 
 function TMultiLog4DLinux.LogWrite(const AMsg: string; const ALogType: TLogType): IMultiLog4D;

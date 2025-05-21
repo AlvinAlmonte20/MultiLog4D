@@ -29,6 +29,7 @@ type
     {$ENDIF}
     class procedure SetUserName(const AUserName: string); static;
     {$ENDIF}
+    class procedure SetHttpServer(const AHttpServer: string); static;
     class procedure SetEnableLog(const AEnableLog: Boolean = True); static;
   end;
 
@@ -85,6 +86,12 @@ begin
     FLogger.UserName(AUserName);
 end;
 {$ENDIF}
+
+class procedure TMultiLog4DUtil.SetHttpServer(const AHttpServer: string);
+begin
+  if Assigned(FLogger) then
+    FLogger.HttpServer(AHttpServer);
+end;
 
 class procedure TMultiLog4DUtil.SetEnableLog(const AEnableLog: Boolean = True);
 begin

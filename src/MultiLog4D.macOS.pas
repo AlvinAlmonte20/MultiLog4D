@@ -13,6 +13,7 @@ uses
   FMX.Dialogs,
   MultiLog4D.Base,
   MultiLog4D.Common,
+  MultiLog4D.Common.WriteToRest,
   MultiLog4D.Interfaces,
   MultiLog4D.Types;
 
@@ -20,6 +21,7 @@ type
   TMultiLog4DMacOS = class(TMultiLog4DBase)
   private
     procedure WriteToNSLog(const AMsg: string; const ALogType: TLogType);
+    procedure WriteToRest(const AMsg: string; const ALogType: TLogType);
   protected
     procedure LogWriteToDestination(const AMsg: string; const ALogType: TLogType);
   public
@@ -50,9 +52,23 @@ begin
   NSLog(NSStringMessage);
 end;
 
+procedure TMultiLog4DMacOS.WriteToRest(const AMsg: string; const ALogType: TLogType);
+begin
+  TMultiLogWriteToRest.Instance
+    .HttpServer(FHttpServer)
+    .SetLogFormat(FLogFormat)
+    .SetDateTimeFormat(FDateTimeFormat)
+    .SetUserName(FUserName)
+    .SetEventID(FEventID)
+    .Execute(AMsg, ALogType);
+end;
+
 procedure TMultiLog4DMacOS.LogWriteToDestination(const AMsg: string; const ALogType: TLogType);
 begin
   WriteToNSLog(AMsg, ALogType);
+
+  if loRest in FLogOutput then
+    WriteToRest(AMsg, ALogType);
 end;
 
 function TMultiLog4DMacOS.LogWrite(const AMsg: string; const ALogType: TLogType): IMultiLog4D;
