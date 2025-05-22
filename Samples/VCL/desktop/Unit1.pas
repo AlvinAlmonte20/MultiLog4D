@@ -31,7 +31,6 @@ type
     lbleditDateTimeFormat: TLabeledEdit;
     lbleditLogFormat: TLabeledEdit;
     chkActiveDeactive: TCheckBox;
-    lbleditRestServer: TLabeledEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -40,7 +39,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure RadioGroup2Click(Sender: TObject);
     procedure chkActiveDeactiveClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FOutputLog : TLogOutputSet;
@@ -61,7 +59,6 @@ var
   LStrTypeMsg : string;
   LTypeMsg : TLogType; //Uses MultiLog4D.Types
 begin
-  LTypeMsg := TLogType.ltInformation;
   case RadioGroup1.ItemIndex of
     0 :
       begin
@@ -88,7 +85,6 @@ begin
   TMultiLog4DUtil
    .Logger
    .Output(FOutputLog)
-   .HttpServer(lbleditRestServer.Text)
    .SetLogFormat(lbleditLogFormat.Text)           //Mask Format
    .SetDateTimeFormat(lbleditDateTimeFormat.Text) //Format DateTime
    .UserName('adrianosantos')
@@ -102,7 +98,6 @@ begin
   TMultiLog4DUtil
    .Logger
    .Output(FOutputLog)
-   .HttpServer(lbleditRestServer.Text)
    .SetLogFormat(lbleditLogFormat.Text) //Mask Format
    .SetDateTimeFormat(lbleditDateTimeFormat.Text) //Format DateTime
    .UserName('adrianosantos')
@@ -116,7 +111,6 @@ begin
   TMultiLog4DUtil
    .Logger
    .Output(FOutputLog)
-   .HttpServer(lbleditRestServer.Text)
    .SetLogFormat(lbleditLogFormat.Text) //Mask Format
    .SetDateTimeFormat(lbleditDateTimeFormat.Text) //Format DateTime
    .UserName('adrianosantos')
@@ -130,13 +124,11 @@ begin
   TMultiLog4DUtil
    .Logger
    .Output(FOutputLog)
-   .HttpServer(lbleditRestServer.Text)
    .SetLogFormat(lbleditLogFormat.Text) //Mask Format
    .SetDateTimeFormat(lbleditDateTimeFormat.Text) //Format DateTime
    .UserName('adrianosantos')
    .EventID(1000)
    .EnableLog(FEnableLog)
-
    .LogWriteInformation('LogWrite Type Error');
 end;
 
@@ -145,7 +137,6 @@ begin
   TMultiLog4DUtil
    .Logger
    .Output(FOutputLog)
-   .HttpServer(lbleditRestServer.Text)
    .SetLogFormat(lbleditLogFormat.Text) //Mask Format
    .SetDateTimeFormat(lbleditDateTimeFormat.Text) //Format DateTime
    .UserName('adrianosantos')
@@ -165,33 +156,12 @@ begin
   FEnableLog := True;
 end;
 
-procedure TForm3.FormShow(Sender: TObject);
-begin
-  RadioGroup2Click(Self);
-end;
-
 procedure TForm3.RadioGroup2Click(Sender: TObject);
 begin
   case RadioGroup2.ItemIndex of
-    0: begin
-      FOutputLog := [loFile];
-      lbleditRestServer.Enabled := False;
-    end;
-
-    1: begin
-      FOutputLog := [loEventViewer]; //Add ML4D_EVENTVIEWER Directivec
-      lbleditRestServer.Enabled := False;
-    end;
-
-    2: begin
-        FOutputLog := [loRest];
-        lbleditRestServer.Enabled := True;
-    end;
-
-    3: begin
-      FOutputLog := [loFile, loEventViewer, loRest];
-      lbleditRestServer.Enabled := True;
-    end;
+    0: FOutputLog := [loFile];
+    1: FOutputLog := [loEventViewer]; //Add ML4D_EVENTVIEWER Directivec
+    2: FOutputLog := [loFile, loEventViewer];
   end;
 end;
 

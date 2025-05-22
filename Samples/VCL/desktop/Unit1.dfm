@@ -2,7 +2,7 @@ object Form3: TForm3
   Left = 0
   Top = 0
   Caption = 'MultiLog4D'
-  ClientHeight = 517
+  ClientHeight = 488
   ClientWidth = 398
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,7 +11,6 @@ object Form3: TForm3
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnCreate = FormCreate
-  OnShow = FormShow
   TextHeight = 15
   object Bevel1: TBevel
     Left = 8
@@ -89,8 +88,7 @@ object Form3: TForm3
     Items.Strings = (
       'File'
       'LogViewer'
-      'Rest Server'
-      'All')
+      'Both')
     TabOrder = 6
     OnClick = RadioGroup2Click
   end
@@ -98,12 +96,12 @@ object Form3: TForm3
     Left = 8
     Top = 311
     Width = 382
-    Height = 157
+    Height = 122
     Caption = 'Settings'
     TabOrder = 7
     object lbleditDateTimeFormat: TLabeledEdit
       Left = 11
-      Top = 83
+      Top = 40
       Width = 358
       Height = 23
       EditLabel.Width = 91
@@ -114,7 +112,7 @@ object Form3: TForm3
     end
     object lbleditLogFormat: TLabeledEdit
       Left = 11
-      Top = 130
+      Top = 88
       Width = 358
       Height = 23
       EditLabel.Width = 61
@@ -123,21 +121,10 @@ object Form3: TForm3
       TabOrder = 1
       Text = '${time} ${username} ${eventid} [${log_type}] - ${message}'
     end
-    object lbleditRestServer: TLabeledEdit
-      Left = 11
-      Top = 35
-      Width = 358
-      Height = 23
-      EditLabel.Width = 59
-      EditLabel.Height = 15
-      EditLabel.Caption = 'Http Server'
-      TabOrder = 2
-      Text = ' https://posttestserver.dev/p/68l8imv7tpg0akg1/post'
-    end
   end
   object chkActiveDeactive: TCheckBox
     Left = 8
-    Top = 473
+    Top = 439
     Width = 97
     Height = 17
     Caption = 'Disable Log'
