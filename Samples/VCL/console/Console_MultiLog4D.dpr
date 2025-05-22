@@ -5,8 +5,8 @@ program Console_MultiLog4D;
 {$R *.res}
 
 uses
-  MultiLog4D.Util,
   MultiLog4D.Types,
+  MultiLog4D.Config,
   System.IOUtils,
   System.SysUtils;
 
@@ -24,13 +24,12 @@ end;
 procedure ExecuteOption(const AOption: Integer);
 begin
   case AOption of
-    1: TMultiLog4DUtil
-      .Logger
-      .LogWrite('LogWrite using ltInformation. Set TLogType on second parameter.', ltInformation);
-    2: TMultiLog4DUtil.Logger.LogWriteInformation('LogWrite Information');
-    3: TMultiLog4DUtil.Logger.LogWriteWarning('LogWrite Warning');
-    4: TMultiLog4DUtil.Logger.LogWriteError('LogWrite Error');
-    5: TMultiLog4DUtil.Logger.LogWriteFatalError('LogWrite FataError');
+    1: MultiLog4D.Config.Log
+                        .LogWrite('LogWrite using ltInformation. Set TLogType on second parameter.', ltInformation);
+    2: MultiLog4D.Config.Log.LogWriteInformation('LogWrite Information');
+    3: MultiLog4D.Config.Log.LogWriteWarning('LogWrite Warning');
+    4: MultiLog4D.Config.Log.LogWriteError('LogWrite Error');
+    5: MultiLog4D.Config.Log.LogWriteFatalError('LogWrite FataError');
   else
     Writeln('Invalid Option. Try again.');
   end;
@@ -46,12 +45,7 @@ var
   UserInput: Integer;
 begin
   try
-    TMultiLog4DUtil
-     .Logger
-     .Tag('MultiLog4D')
-     .Output([loConsole, loFile, loEventViewer, loRest])
-     .HttpServer('https://posttestserver.dev/p/68l8imv7tpg0akg1/post')
-     .LogWrite('>>>>>>>>>> App Console - Starting <<<<<<<<<', ltInformation);
+    MultiLog4D.Config.Log.LogWrite('>>>>>>>>>> App Console - Starting <<<<<<<<<', ltInformation);
 
     repeat
       ShowMenu;
