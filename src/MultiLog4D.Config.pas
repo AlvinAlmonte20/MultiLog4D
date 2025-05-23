@@ -29,5 +29,5 @@ initialization
                         //.FileName(ExtractFilePath(Application.exename) + 'LogFile.txt')
                         //.FileName(ExtractFilePath(Paramstr(0)) + 'LogFile.txt')
                         .Output([loConsole, loFile, loEventViewer, loRest])
-                        .HttpServer('https://posttestserver.dev/p/3jeqepvu8bw2eva4/post');
+                        .HttpServer('https://posttestserver.dev/p/68l8imv7tpg0akg1/');
 end.
