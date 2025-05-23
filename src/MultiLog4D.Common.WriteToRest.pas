@@ -6,6 +6,8 @@ uses
   System.SysUtils,
   System.IOUtils,
   System.Net.HttpClient,
+  System.Net.URLClient,
+  System.NetConsts,
   System.JSON,
   {$IFDEF MSWINDOWS}
     Winapi.Windows,
